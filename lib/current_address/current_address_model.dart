@@ -10,7 +10,14 @@ class CurrentAddressModel with ChangeNotifier {
   Position _position;
   StreamSubscription<Position> _streamSubscription;
   Address address;
+  Timer timer;
+  int startTime = 5;
   initTast(context) {
+    fiveSecond();
+    time();
+  }
+
+  fiveSecond() {
     var locationOptions =
         LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 10);
     _streamSubscription = Geolocator()
@@ -22,6 +29,24 @@ class CurrentAddressModel with ChangeNotifier {
       // rr();
       print(address);
       print(address?.addressLine);
+      notifyListeners();
+    });
+  }
+
+  time() {
+    const oneSec = const Duration(seconds: 1);
+    timer = new Timer.periodic(oneSec, (Timer timer) {
+      if (startTime < 1) {
+        print(startTime);
+      } else {
+        startTime = startTime - 1;
+        if (startTime == 0) {
+          fiveSecond();
+          startTime = 5;
+          notifyListeners();
+        }
+        notifyListeners();
+      }
       notifyListeners();
     });
   }
