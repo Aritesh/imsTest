@@ -13,6 +13,8 @@ class CurrentAddress extends StatefulWidget {
 
 class _CurrentAddressState extends State<CurrentAddress>
     with WidgetsBindingObserver {
+  Timer timer1;
+  int startTime1 = 5;
   @override
   void initState() {
     // TODO: implement initState
@@ -35,8 +37,20 @@ class _CurrentAddressState extends State<CurrentAddress>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.paused:
-        showToast(
-            Provider.of<CurrentAddressModel>(context).address?.addressLine);
+        const oneSec = const Duration(seconds: 1);
+        timer1 = new Timer.periodic(oneSec, (Timer timer) {
+          if (startTime1 < 1) {
+          } else {
+            startTime1 = startTime1 - 1;
+            if (startTime1 == 0) {
+              showToast(Provider.of<CurrentAddressModel>(context)
+                  .address
+                  ?.addressLine);
+              startTime1 = 5;
+            }
+          }
+        });
+
         break;
     }
   }
